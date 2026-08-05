@@ -1,1 +1,0 @@
-// Checa se o usuário é Admin, Coordenador, etc.
