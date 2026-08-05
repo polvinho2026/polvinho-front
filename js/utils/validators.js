@@ -1,0 +1,1 @@
+// funções puras para usar antes de enviar dados ao servidor. Por exemplo, uma função que checa se um e-mail é válido ou se uma senha atende aos requisitos mínimos de segurança.

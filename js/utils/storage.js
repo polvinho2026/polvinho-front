@@ -1,0 +1,1 @@
+// funções para lidar com armazenamento local. ferramentas de apoio. 
