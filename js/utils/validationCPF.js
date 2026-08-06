@@ -1,10 +1,10 @@
-function validationCpf(cpf){
+export function validationCpf(cpf){
 
     const regex = /\D/g
     const cpfReplace = cpf.replace(regex, "")
 
     if(cpfReplace.length !== 11){
-        return false
+        throw new Error("ERRO, CPF inválido.")
     }
 
     const testeCpfIgual = cpfReplace
@@ -12,7 +12,7 @@ function validationCpf(cpf){
         .every(num => num === cpfReplace[0])
 
     if(testeCpfIgual){
-        return false
+        throw new Error("ERRO, CPF inválido.")
     }
 
     let multiplicador = 10
@@ -32,7 +32,7 @@ function validationCpf(cpf){
     }
     
     if(firstChecker != cpfReplace[9]){
-        return false
+        throw new Error("ERRO, CPF inválido.")
     }
 
     multiplicador = 11
@@ -52,12 +52,9 @@ function validationCpf(cpf){
     }
     
     if(secondChecker != cpfReplace[10]){
-        return false
+        throw new Error("ERRO, CPF inválido.")
     }
 
     return true
 }
 
-validationCpf("144.657.679-51")
-
-console.log(validationCpf("144.657.679-51"))
