@@ -1,4 +1,4 @@
-function generateRegistration(){
+export function generateRegistration(){
 
     const gerNumRandom = []
 
@@ -9,5 +9,3 @@ function generateRegistration(){
 
     return gerNumRandom.join("")
 }
-
-console.log(generateRegistration())
