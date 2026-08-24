@@ -1,0 +1,100 @@
+.list-table {
+    --table-columns: repeat(1, 1fr);
+    --visible-rows: 4;
+    --table-header-height: 3rem;
+    --table-row-height: 4rem;
+
+    width: 100%;
+}
+
+.list-table-viewport {
+    width: 100%;
+
+    height: calc(
+        var(--table-header-height) + (var(--visible-rows) * var(--table-row-height))
+    );
+
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) var(--color-background);
+}
+
+.list-table-viewport::-webkit-scrollbar {
+    width: 0.625rem;
+    height: 0.625rem;
+}
+
+.list-table-viewport::-webkit-scrollbar-track {
+    background-color: var(--color-background);
+}
+
+.list-table-viewport::-webkit-scrollbar-thumb {
+    min-height: 2rem;
+    background-color: var(--color-border);
+    border: 0.125rem solid var(--color-background);
+    border-radius: 999px;
+}
+
+.list-table-viewport::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-text-muted);
+}
+
+.list-table-header,
+.list-table-row {
+    display: grid;
+    grid-template-columns: var(--table-columns);
+    align-items: center;
+    min-width: 43.75rem;
+}
+
+.list-table-header {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    height: var(--table-header-height);
+    font-weight: bold;
+    color: var(--color-text-secondary);
+    background-color: var(--color-background);
+    border-top: 1px solid var(--color-border-strong);
+    border-bottom: 1px solid var(--color-border-strong);
+}
+
+.list-table-row {
+    min-height: var(--table-row-height);
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.list-table-cell {
+    min-width: 0;
+    padding: 0.75rem 0;
+}
+
+.list-table-cell:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.list-table-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+
+    background-color: var(--color-background);
+}
+
+.list-table-pagination button {
+    cursor: pointer;
+    color: var(--color-primary);
+}
+
+.list-table-pagination button:disabled {
+    cursor: default;
+    opacity: 0.5;
+}
