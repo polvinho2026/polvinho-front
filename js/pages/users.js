@@ -163,9 +163,10 @@ export function renderUsersPage(userLogged, usersList) {
         }
     ]
 
+
     const usersTable = createListTable({
         columns,
-        data: usersList,
+        data: usersList, 
         rowsPerPage: 20,
         visibleRows: 4
     })
@@ -177,6 +178,31 @@ export function renderUsersPage(userLogged, usersList) {
         })
         updateSelection()
     })
+
+    const deleteButton = selectionButtons.querySelector('.red');
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async () => {
+            if (selectedUsers.size === 0) return;
+
+            const confirmacao = confirm(`Tem certeza que deseja excluir ${selectedUsers.size} usuário(s)?`);
+
+            if (confirmacao) {
+                try {
+                    for (const user of selectedUsers) {
+                        await deleteUser(user.id);
+                }
+
+                alert('Usuários excluídos com sucesso!');
+                window.location.reload();
+
+                } catch (error) {
+                    alert('Erro ao excluir usuário. Verifique a conexão com o backend.');
+                }
+            }
+        });
+    }
+
 
     usersCard.appendChild(usersCardButtons)
     usersCard.appendChild(usersTable)
