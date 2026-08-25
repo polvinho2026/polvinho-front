@@ -4,6 +4,7 @@ import { createListTable } from "../components/listTable.js";
 import { createSelectionButtons } from "../components/selectionButtons.js";
 import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
+import { deleteUser } from '../api/users.js';
 
 export function renderUsersPage(userLogged, usersList) {
 
