@@ -1,0 +1,17 @@
+.linkButton {
+    text-decoration: underline;
+    font-size: 0.75rem;
+}
+
+.linkButton.small {
+    font-size: 0.625rem;
+}
+
+.linkButton.blue {
+    color: var(--color-text-link);
+}
+
+.linkButton:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}

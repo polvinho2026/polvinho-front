@@ -1,0 +1,23 @@
+.user-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-small {
+    width: 1.875rem;
+    height: 1.875rem;
+}
+
+.avatar-medium {
+    width: 3.75rem;
+    height: 3.75rem;
+}
+
+.avatar-large {
+    width: 7.5rem;
+    height: 7.5rem;
+}
+
+.avatar-bordered {
+    border: 0.3125rem solid var(--color-surface);
+}

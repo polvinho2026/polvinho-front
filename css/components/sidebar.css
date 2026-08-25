@@ -1,0 +1,95 @@
+.aside-default {
+    background-color: var(--color-sidebar);
+    width: 20.625rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    border-radius: 1.5rem;
+    transition: width 0.25s ease;
+}
+
+.aside-default.collapsed-sidebar {
+    width: 4.375rem;
+}
+
+.aside-header {
+    display: flex;
+    justify-content: end;
+    padding: 1.25rem;
+}
+
+.aside-user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.aside-user-info h2 {
+    margin: 0;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-text-heading);
+}
+
+.aside-user-info p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.aside-navigation-menu .default-button.white,
+.aside-footer .default-button.transparent {
+    color: var(--color-text-primary);
+}
+
+.aside-navigation-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2.5rem 0;
+    flex: 1;
+    min-height: 0;
+}
+
+.aside-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2.5rem;
+    gap: 0.5rem;
+}
+
+.aside-default.collapsed-sidebar .aside-user-info,
+.aside-default.collapsed-sidebar .aside-navigation-menu,
+.aside-default.collapsed-sidebar .aside-footer {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.aside-default.collapsed-sidebar .aside-header {
+    justify-content: center;
+}
+
+@media (max-width: 48rem) {
+    .aside-default {
+        width: 4.375rem;
+        border-radius: 0 1rem 1rem 0;
+    }
+
+    .aside-default:not(.collapsed-sidebar) {
+        position: fixed;
+        z-index: 2;
+        width: min(20.625rem, 82vw);
+        box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 15%);
+    }
+
+    .aside-default:not(.collapsed-sidebar) .aside-user-info,
+    .aside-default:not(.collapsed-sidebar) .aside-navigation-menu,
+    .aside-default:not(.collapsed-sidebar) .aside-footer {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

@@ -1,0 +1,11 @@
+.selection-info-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.selection-quantity {
+    font-size: 0.625rem;
+    color: var(--color-text-secondary);
+}

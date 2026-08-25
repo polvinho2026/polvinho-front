@@ -1,2 +1,0 @@
-// #Gera as listas padronizadas (nome, matrícula, etc)
-// Em vez de escrever a mesma tabela HTML cinco vezes, esse arquivo terá uma função que recebe um array de dados (como uma lista de cursos) e devolve o HTML da tabela pronto para ser jogado na tela usando innerHTML. Isso economiza milhares de linhas de código.
