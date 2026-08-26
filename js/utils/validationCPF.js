@@ -18,12 +18,18 @@ function validationCpf(cpf){
     let multiplicador = 10
     let soma = 0
     for(let i = 0; i < cpfReplace.length - 2; i++){
+<<<<<<< Updated upstream:js/utils/validationCPF.js
         const firstChecker = cpfReplace[i] * multiplicador
         multiplicador -= 1
         soma = firstChecker + soma
+=======
+        const firstChecker = cpfReplace[i] * multiplicator
+        multiplicator -= 1
+        sum = firstChecker + sum
+>>>>>>> Stashed changes:src/js/utils/validationCPF.js
     }
 
-    let firstChecker = soma % 11
+    let firstChecker = sum % 11
 
     if( firstChecker >= 2){
         firstChecker = 11 - firstChecker
@@ -38,12 +44,18 @@ function validationCpf(cpf){
     multiplicador = 11
     soma = 0
     for(let i = 0; i < cpfReplace.length - 1; i++){
+<<<<<<< Updated upstream:js/utils/validationCPF.js
         const secondChecker = cpfReplace[i] * multiplicador
         multiplicador -= 1
         soma = secondChecker + soma
+=======
+        const secondChecker = cpfReplace[i] * multiplicator
+        multiplicator -= 1
+        sum = secondChecker + sum
+>>>>>>> Stashed changes:src/js/utils/validationCPF.js
     }
 
-    let secondChecker = soma % 11
+    let secondChecker = sum % 11
 
     if( secondChecker>= 2){
         secondChecker = 11 - secondChecker
@@ -57,7 +69,10 @@ function validationCpf(cpf){
 
     return true
 }
+<<<<<<< Updated upstream:js/utils/validationCPF.js
 
 validationCpf("144.657.679-51")
 
 console.log(validationCpf("144.657.679-51"))
+=======
+>>>>>>> Stashed changes:src/js/utils/validationCPF.js
