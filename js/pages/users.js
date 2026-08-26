@@ -4,7 +4,7 @@ import { createListTable } from "../components/listTable.js";
 import { createSelectionButtons } from "../components/selectionButtons.js";
 import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
-import { getUsers } from "../api/users.js";
+import { getUsers, deleteUser } from "../api/users.js";
 
 export function renderUsersPage(userLogged, usersResponse) {
 
@@ -163,6 +163,7 @@ export function renderUsersPage(userLogged, usersResponse) {
         }
     ]
 
+
     const usersTable = createListTable({
         columns,
         data: usersResponse.data,
@@ -185,6 +186,31 @@ export function renderUsersPage(userLogged, usersResponse) {
         })
         updateSelection()
     })
+
+    const deleteButton = selectionButtons.querySelector('.red');
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', async () => {
+            if (selectedUsers.size === 0) return;
+
+            const confirmacao = confirm(`Tem certeza que deseja excluir ${selectedUsers.size} usuário(s)?`);
+
+            if (confirmacao) {
+                try {
+                    for (const user of selectedUsers) {
+                        await deleteUser(user.id);
+                }
+
+                alert('Usuários excluídos com sucesso!');
+                window.location.reload();
+
+                } catch (error) {
+                    alert('Erro ao excluir usuário. Verifique a conexão com o backend.');
+                }
+            }
+        });
+    }
+
 
     usersCard.appendChild(usersCardButtons)
     usersCard.appendChild(usersTable)
