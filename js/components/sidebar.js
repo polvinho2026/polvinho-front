@@ -1,6 +1,7 @@
 import { createIconButton } from "./iconButton.js"
 import { createUserProfileImage } from "./userProfileImage.js"
 import { createDefaultButton } from "./defaultButton.js"
+import { getCurrentRoutePath, updateUrl } from "../core/router.js"
 
 export function createSidebar(user = {}) {
     const aside = document.createElement('aside')
@@ -42,34 +43,34 @@ export function createSidebar(user = {}) {
     const allMenuItems = [
         {
             label: 'Início',
-            selected: false,
+            path: '/',
             roles: ['administrador', 'coordenador', 'professor', 'aluno']
         },
         {
             label: 'Usuários',
-            selected: false,
+            path: '/usuarios',
             roles: ['administrador', 'coordenador']
         },
         {
             label: 'Departamentos',
-            selected: false,
+            path: '/departamentos',
             roles: ['administrador', 'coordenador']
         },
         {
             label: 'Cursos',
-            selected: false,
+            path: '/cursos',
             roles: ['administrador', 'coordenador']
         },
         {
             label: 'Disciplinas',
-            selected: false,
+            path: '/disciplinas',
             roles: ['administrador', 'coordenador', 'professor', 'aluno']
         },
     ]
 
     const menuItems = allMenuItems.filter(item => item.roles.includes(user.role))
 
-    let currentSelectedButton = null
+    const buttonsByPath = new Map()
 
     menuItems.forEach(item => {
 
@@ -79,25 +80,27 @@ export function createSidebar(user = {}) {
             color: 'white'
         })
 
-        if (item.selected) {
-            button.classList.add('blue')
-            button.classList.remove('white')
-            currentSelectedButton = button
-        }
-
         asideNavigationMenu.appendChild(button)
+        buttonsByPath.set(item.path, button)
 
-        button.addEventListener('click', () => {
-            if (currentSelectedButton) {
-                currentSelectedButton.classList.remove('blue')
-                currentSelectedButton.classList.add('white')
-            }
-
-            button.classList.add('blue')
-            button.classList.remove('white')
-            currentSelectedButton = button
+        button.addEventListener('click', (event) => {
+            event.preventDefault()
+            updateUrl(item.path)
         })
     })
+
+    function updateSelectedButton() {
+        const currentPath = getCurrentRoutePath()
+
+        buttonsByPath.forEach((button, path) => {
+            const isSelected = path === currentPath
+            button.classList.toggle('blue', isSelected)
+            button.classList.toggle('white', !isSelected)
+        })
+    }
+
+    window.addEventListener('hashchange', updateSelectedButton)
+    updateSelectedButton()
 
     const asideFooter = document.createElement('div')
     asideFooter.classList.add('aside-footer')

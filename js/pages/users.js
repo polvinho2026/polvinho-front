@@ -4,9 +4,9 @@ import { createListTable } from "../components/listTable.js";
 import { createSelectionButtons } from "../components/selectionButtons.js";
 import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
-import { deleteUser } from '../api/users.js';
+import { getUsers, deleteUser } from "../api/users.js";
 
-export function renderUsersPage(userLogged, usersList) {
+export function renderUsersPage(userLogged, usersResponse) {
 
     const usersPage = document.createElement('main')
 
@@ -142,14 +142,14 @@ export function renderUsersPage(userLogged, usersList) {
                 selectInput.type = 'checkbox'
                 selectInput.name = 'select-input'
                 selectInput.classList.add('select-input')
-                selectInput.checked = selectedUsers.has(user)
+                selectInput.checked = selectedUsers.has(user.id)
                 selectInput.setAttribute('aria-label', `Selecionar ${user.name}`)
 
                 selectInput.addEventListener('change', (event) => {
                     if (event.target.checked) {
-                        selectedUsers.add(user)
+                        selectedUsers.add(user.id)
                     } else {
-                        selectedUsers.delete(user)
+                        selectedUsers.delete(user.id)
                     }
 
                     updateSelection()
@@ -166,9 +166,17 @@ export function renderUsersPage(userLogged, usersList) {
 
     const usersTable = createListTable({
         columns,
-        data: usersList, 
-        rowsPerPage: 20,
-        visibleRows: 4
+        data: usersResponse.data,
+        pagination: usersResponse.pagination,
+        visibleRows: 4,
+        onPageChange: async (page) => {
+            const response = await getUsers({
+                page,
+                limit: usersResponse.pagination.limit
+            })
+
+            usersTable.update(response)
+        }
     })
 
     selectionInfo.cleanButton.addEventListener('click', () => {
