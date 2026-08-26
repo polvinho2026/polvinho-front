@@ -1,14 +1,15 @@
-import { createSelectionButtons } from "./selectionButtons.js"
-
 export function createListTable({
     columns = [],
     data = [],
-    rowsPerPage = 20,
-    visibleRows = 4
+    pagination = {},
+    visibleRows = 4,
+    onPageChange
 }) {
-    let currentPage = 1
-
-    const totalPages = Math.max(1, Math.ceil(data.length / rowsPerPage))
+    let currentData = data
+    let currentPage = pagination.page ?? 1
+    let totalPages = Math.max(1, pagination.totalPages ?? 1)
+    let isLoading = false
+    let loadError = ''
 
     const table = document.createElement('div')
     table.classList.add('list-table')
@@ -41,18 +42,19 @@ export function createListTable({
 
     viewPort.appendChild(tableBody)
 
-    const pagination = document.createElement('div')
-    pagination.classList.add('list-table-pagination')
+    const paginationControls = document.createElement('div')
+    paginationControls.classList.add('list-table-pagination')
 
     const previousButton = document.createElement('button')
     previousButton.textContent = 'Anterior'
 
     const pageInformation = document.createElement('span')
+    pageInformation.setAttribute('aria-live', 'polite')
     
     const nextButton = document.createElement('button')
     nextButton.textContent = 'Próxima'
 
-    pagination.append(
+    paginationControls.append(
         previousButton,
         pageInformation,
         nextButton
@@ -61,12 +63,7 @@ export function createListTable({
     function renderRows() {
         tableBody.replaceChildren()
 
-        const startIndex = (currentPage - 1) * rowsPerPage
-        const endIndex = startIndex + rowsPerPage
-
-        const currentPageData = data.slice(startIndex, endIndex)
-
-        currentPageData.forEach(item => {
+        currentData.forEach(item => {
             const row = document.createElement('div')
             row.classList.add('list-table-row')
             row.setAttribute('role', 'row')
@@ -93,30 +90,65 @@ export function createListTable({
             tableBody.appendChild(row)
         })
 
-        pageInformation.textContent = `Página ${currentPage} de ${totalPages}`
+        if (currentData.length === 0) {
+            const emptyMessage = document.createElement('p')
+            emptyMessage.classList.add('list-table-empty')
+            emptyMessage.textContent = 'Nenhum usuário encontrado.'
+            tableBody.appendChild(emptyMessage)
+        }
 
-        previousButton.disabled = currentPage === 1
-        nextButton.disabled = currentPage === totalPages
+        pageInformation.textContent = loadError || `Página ${currentPage} de ${totalPages}`
+
+        previousButton.disabled = isLoading || currentPage === 1
+        nextButton.disabled = isLoading || currentPage === totalPages
 
         viewPort.scrollTop = 0
     }
 
+    async function requestPage(page) {
+        if (isLoading || typeof onPageChange !== 'function') {
+            return
+        }
+
+        isLoading = true
+        loadError = ''
+        pageInformation.textContent = 'Carregando...'
+        previousButton.disabled = true
+        nextButton.disabled = true
+
+        try {
+            await onPageChange(page)
+        } catch (error) {
+            console.error(error)
+            loadError = 'Erro ao carregar a página.'
+        } finally {
+            isLoading = false
+            renderRows()
+        }
+    }
+
     previousButton.addEventListener('click', () => {
         if (currentPage > 1) {
-            currentPage--
-            renderRows()
+            requestPage(currentPage - 1)
         }
     })
 
     nextButton.addEventListener('click', () => {
         if (currentPage < totalPages) {
-            currentPage++
-            renderRows()
+            requestPage(currentPage + 1)
         }
     })
 
     table.appendChild(viewPort)
-    table.appendChild(pagination)
+    table.appendChild(paginationControls)
+
+    table.update = ({ data: newData = [], pagination: newPagination = {} }) => {
+        currentData = newData
+        currentPage = newPagination.page ?? currentPage
+        totalPages = Math.max(1, newPagination.totalPages ?? totalPages)
+        loadError = ''
+        renderRows()
+    }
 
     renderRows()
 
