@@ -5,6 +5,7 @@ import { createSelectionButtons } from "../components/selectionButtons.js";
 import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
 import { getUsers, deleteUser } from "../api/users.js";
+import { createFilterModal } from "../components/filterModal.js";
 
 export function renderUsersPage(userLogged, usersResponse) {
 
@@ -64,6 +65,10 @@ export function renderUsersPage(userLogged, usersResponse) {
 
     const filterUsersButton = createIconButton({icon: 'assets/images/filter.svg', size: 'medium'})
 
+    const filterMenuContainer = document.createElement('div')
+    filterMenuContainer.classList.add('filter-menu-container')
+    filterMenuContainer.appendChild(filterUsersButton)
+
     const selectionInfo = createSelectionInfo()
     const selectedUsers = new Set()
     const selectionButtons = createSelectionButtons()
@@ -75,7 +80,7 @@ export function renderUsersPage(userLogged, usersResponse) {
         selectionInfo.cleanButton.disabled = selectionCount === 0
     }
 
-    usersCardButtonsSecondSession.appendChild(filterUsersButton)
+    usersCardButtonsSecondSession.appendChild(filterMenuContainer)
     usersCardButtonsSecondSession.appendChild(selectionInfo)
 
     usersCardButtons.appendChild(usersCardButtonsFirstSession)
@@ -211,6 +216,31 @@ export function renderUsersPage(userLogged, usersResponse) {
         });
     }
 
+    const filterSessions = [
+        {
+            name: 'role',
+            title: 'Papel',
+            filters: [
+                {title: 'Administrador', value: 'admin'},
+                {title: 'Coordenador', value: 'coordinator'},
+                {title: 'Professor', value: 'professor'},
+                {title: 'Aluno', value: 'student'},
+            ]
+        },
+        {
+            name: 'status',
+            title: 'Status',
+            filters: [
+                {title: 'Ativos', value: 'active', buttonType: 'radio'},
+                {title: 'Excluídos', value: 'excluded', buttonType: 'radio'},
+            ]
+        }
+    ]
+
+    const filterModal = createFilterModal({sessions: filterSessions})
+
+    filterUsersButton.addEventListener('click', filterModal.open)
+    filterMenuContainer.appendChild(filterModal)
 
     usersCard.appendChild(usersCardButtons)
     usersCard.appendChild(usersTable)

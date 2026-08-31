@@ -8,5 +8,6 @@
 @import 'components/listTable.css';
 @import 'components/selectionInfo.css';
 @import 'components/selectionButtons.css';
+@import 'components/filterModal.css';
 
 @import 'pages/users.css';
