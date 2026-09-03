@@ -1,0 +1,10 @@
+.main-form{
+    background: #FFFFFF;
+    width: 42rem;   
+    height: 50.875rem;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+}

@@ -1,0 +1,10 @@
+.btn-form{
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.btn-form img{
+    width: 1rem;
+    height: 1rem;
+}
