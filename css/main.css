@@ -10,3 +10,11 @@
 @import 'components/selectionButtons.css';
 
 @import 'pages/users.css';
+
+@import './components/input.css';
+@import './components/buttons.css';
+@import './components/mainContent.css';
+@import './components/mainForm.css';
+@import './components/header.css';
+@import './components/logo.css';
+@import './components/ulForm.css';
