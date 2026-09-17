@@ -6,10 +6,17 @@ import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
 import { getUsers, deleteUser } from "../api/users.js";
 import { createFilterModal } from "../components/filterModal.js";
+import { updateUrl } from "../core/router.js";
 
 export function renderUsersPage(userLogged, usersResponse) {
 
     const usersPage = document.createElement('main')
+
+    let currentFilters = { //guarda o que o usuário está filtrando, para quando ele mudar de página, os filtros continuarem aplicados
+        name: '',
+        role: '',
+        includeExcluded: false
+    };
 
     const pageHeader = document.createElement('div')
     pageHeader.classList.add('page-header')
@@ -37,6 +44,11 @@ export function renderUsersPage(userLogged, usersResponse) {
     searchInput.type = 'search'
     searchInput.name = 'search-input'
     searchInput.placeholder = 'Pesquisar usuário'
+
+    searchInput.addEventListener('input', (event) => {
+        currentFilters.name = event.target.value;
+        applyFilters();
+    });
 
     searchBox.appendChild(searchImage)
     searchBox.appendChild(searchInput)
@@ -143,6 +155,12 @@ export function renderUsersPage(userLogged, usersResponse) {
 
                 visualizeButton.appendChild(visualizeIcon)
 
+                visualizeButton.addEventListener('click', () => {
+                    localStorage.setItem('visualizeUserId', user.id);
+                    updateUrl('/detalhe-usuario');
+                });
+
+            
                 const selectInput = document.createElement('input')
                 selectInput.type = 'checkbox'
                 selectInput.name = 'select-input'
@@ -177,12 +195,29 @@ export function renderUsersPage(userLogged, usersResponse) {
         onPageChange: async (page) => {
             const response = await getUsers({
                 page,
-                limit: usersResponse.pagination.limit
+                limit: usersResponse.pagination.limit,
+                name: currentFilters.name, 
+                role: currentFilters.role, 
+                includeExcluded: currentFilters.includeExcluded 
             })
-
             usersTable.update(response)
         }
-    })
+        })
+
+    async function applyFilters() {
+        try {
+            const response = await getUsers({
+                page: 1, 
+                limit: usersResponse.pagination.limit,
+                name: currentFilters.name,
+                role: currentFilters.role,
+                includeExcluded: currentFilters.includeExcluded
+            });
+            usersTable.update(response);
+        } catch (error) {
+            console.error("Erro ao aplicar filtros:", error);
+        }
+    }
 
     selectionInfo.cleanButton.addEventListener('click', () => {
         selectedUsers.clear()
@@ -237,7 +272,23 @@ export function renderUsersPage(userLogged, usersResponse) {
         }
     ]
 
-    const filterModal = createFilterModal({sessions: filterSessions})
+   const filterModal = createFilterModal({
+        sessions: filterSessions,
+        onFilter: (selectedFilters) => {
+            
+            currentFilters.role = selectedFilters.role && selectedFilters.role.length > 0 
+                ? selectedFilters.role[0] 
+                : '';
+
+            
+            const status = selectedFilters.status && selectedFilters.status.length > 0 
+                ? selectedFilters.status[0] 
+                : 'active';
+            currentFilters.includeExcluded = (status === 'excluded');
+
+            applyFilters();
+        }
+    });
 
     filterUsersButton.addEventListener('click', filterModal.open)
     filterMenuContainer.appendChild(filterModal)

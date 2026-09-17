@@ -56,3 +56,22 @@ if (!response.ok) {
         throw error; 
     }
 };
+
+export async function getUserById(userId) {
+    const response = await fetch(`${BASE_URL}/users/${userId}`);
+
+    if (!response.ok) {
+        let message = `Erro ao buscar usuário: ${response.status}`;
+
+        try {
+            const error = await response.json();
+            message = error.message || message;
+        } catch {
+            // Mantém a mensagem padrão quando a API não retorna JSON.
+        }
+
+        throw new Error(message);
+    }
+
+    return response.json();
+}

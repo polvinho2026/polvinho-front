@@ -1,0 +1,1 @@
+// guardar lógicas puras que não mexem com visual (HTML). São funções de apoio que calculam ou transformam dados
