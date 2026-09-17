@@ -228,22 +228,21 @@ export function renderUsersPage(userLogged, usersResponse) {
     })
 
     const deleteButton = selectionButtons.querySelector('.red');
-
     if (deleteButton) {
         deleteButton.addEventListener('click', async () => {
             if (selectedUsers.size === 0) return;
-
+            
             const confirmacao = confirm(`Tem certeza que deseja excluir ${selectedUsers.size} usuário(s)?`);
-
+            
             if (confirmacao) {
                 try {
-                    for (const user of selectedUsers) {
-                        await deleteUser(user.id);
-                }
-
-                alert('Usuários excluídos com sucesso!');
-                window.location.reload();
-
+                    
+                    for (const userId of selectedUsers) {
+                        await deleteUser(userId);
+                    }
+                    
+                    alert('Usuários excluídos com sucesso!');
+                    window.location.reload();
                 } catch (error) {
                     alert('Erro ao excluir usuário. Verifique a conexão com o backend.');
                 }
