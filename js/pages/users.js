@@ -276,8 +276,8 @@ export function renderUsersPage(userLogged, usersResponse) {
         onFilter: (selectedFilters) => {
             
             currentFilters.role = selectedFilters.role && selectedFilters.role.length > 0 
-                ? selectedFilters.role[0] 
-                : '';
+            ? selectedFilters.role.join(',') 
+            : '';
 
             
             const status = selectedFilters.status && selectedFilters.status.length > 0 
