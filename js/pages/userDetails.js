@@ -1,5 +1,6 @@
 import { getUserById, deleteUser } from "../api/users.js";
 import { createDefaultButton } from "../components/defaultButton.js";
+import { createConfirmModal } from "../components/confirmModal.js";
 import { updateUrl } from "../core/router.js";
 
 export async function renderUserDetailsPage(userLogged) {
@@ -75,19 +76,21 @@ export async function renderUserDetailsPage(userLogged) {
         });
 
         deleteButton.addEventListener('click', async () => {
-            const confirmacao = confirm('Tem certeza que deseja excluir este usuário?');
-            
-            if (confirmacao) {
-                try {
-                    await deleteUser(userId);
-                    alert('Usuário excluído com sucesso!');
-                    updateUrl('/usuarios'); // Redireciona de volta para a lista de usuários
-                } catch (error) {
-                    console.error(error);
-                    alert('Erro ao excluir usuário. Verifique a conexão com o backend.');
-                }
+            createConfirmModal({
+            title: 'Confirmar Exclusão',
+            message: 'Tem certeza que você deseja excluir esse usuário?',
+            onConfirm: async () => {
+            try {
+                await deleteUser(userId);
+                alert('Usuário excluído com sucesso!');
+                updateUrl('/usuarios'); 
+            } catch (error) {
+                console.error(error);
+                alert('Erro ao excluir usuário. Verifique a conexão com o backend.');
             }
-        });
+        }
+    });
+});
 
         cardActions.append(editButton, deleteButton);
 

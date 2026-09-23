@@ -6,6 +6,7 @@ import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
 import { getUsers, deleteUser } from "../api/users.js";
 import { createFilterModal } from "../components/filterModal.js";
+import { createConfirmModal } from "../components/confirmModal.js";
 import { updateUrl } from "../core/router.js";
 
 export function renderUsersPage(userLogged, usersResponse) {
@@ -232,11 +233,11 @@ export function renderUsersPage(userLogged, usersResponse) {
         deleteButton.addEventListener('click', async () => {
             if (selectedUsers.size === 0) return;
             
-            const confirmacao = confirm(`Tem certeza que deseja excluir ${selectedUsers.size} usuário(s)?`);
-            
-            if (confirmacao) {
+            createConfirmModal({
+            title: 'Confirmar Exclusão',
+            message: `Tem certeza que você deseja excluir ${selectedUsers.size} usuário(s)?`,
+            onConfirm: async () => {
                 try {
-                    
                     for (const userId of selectedUsers) {
                         await deleteUser(userId);
                     }
@@ -248,7 +249,8 @@ export function renderUsersPage(userLogged, usersResponse) {
                 }
             }
         });
-    }
+    });
+}
 
     const filterSessions = [
         {

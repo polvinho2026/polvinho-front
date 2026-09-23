@@ -9,6 +9,7 @@
 @import 'components/selectionInfo.css';
 @import 'components/selectionButtons.css';
 @import 'components/filterModal.css';
+@import 'components/confirmModal.css';
 @import url('./pages/userDetails.css');
 
 @import 'pages/users.css';
