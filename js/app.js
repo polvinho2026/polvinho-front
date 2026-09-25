@@ -3,6 +3,7 @@ import { createSidebar } from "./components/sidebar.js"
 import { getUsers } from "./api/users.js"
 import { startRouter } from "./core/router.js"
 import { renderUserDetailsPage } from "./pages/userDetails.js";
+import { renderCreateDepartmentPage, renderDepartmentsPage } from "./pages/department.js"
 
 const app = document.getElementById('app')
 
@@ -34,6 +35,9 @@ async function startApp() {
        '/detalhe-usuario': async () => {
             return await renderUserDetailsPage(user);
         },
+
+        '/criar-departamento': () => renderCreateDepartmentPage(),
+        '/departamentos': () => renderDepartmentsPage(),
 
         '*': () => {
             const notFound = document.createElement('main')
