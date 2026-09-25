@@ -1,0 +1,141 @@
+.create-department-page {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow-y: auto;
+    padding: 2rem clamp(1rem, 4vw, 4rem) 3rem;
+}
+
+.create-department-content {
+    position: relative;
+    width: 100%;
+    max-width: 36rem;
+    margin: 0 auto;
+}
+
+.create-department-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.create-department-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 1rem 2rem 1.25rem;
+}
+
+.create-department-header img {
+    width: 7.5rem;
+    height: 7.5rem;
+    object-fit: contain;
+}
+
+.create-department-header h1 {
+    font-size: 1.75rem;
+    color: var(--color-text-heading);
+}
+
+.create-department-card {
+    overflow: hidden;
+    background-color: var(--color-surface);
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+}
+
+.create-department-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.create-department-tabs .default-button {
+    width: 100%;
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+}
+
+.create-department-tabs .default-button:disabled {
+    opacity: 1;
+    color: var(--color-text-muted);
+}
+
+.create-department-tabs .is-active {
+    background-color: #eff6ff;
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+}
+
+.create-department-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem 1.75rem 1.75rem;
+}
+
+.create-department-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.create-department-field label span {
+    color: var(--color-text-danger);
+}
+
+.create-department-field input {
+    width: 100%;
+    min-width: 0;
+    min-height: 2.5rem;
+    padding: 0.65rem 0.875rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.4rem;
+    background-color: var(--color-surface);
+    font-size: 0.875rem;
+}
+
+.create-department-page input:focus-visible,
+.create-department-page button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+.departments-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.create-department-feedback {
+    color: var(--color-text-danger);
+    line-height: 1.6;
+}
+
+.create-department-submit.default-button {
+    width: 100%;
+    min-height: 2.75rem;
+    margin-top: 0.75rem;
+}
+
+@media (max-width: 48rem) {
+    .create-department-page {
+        padding: 1.25rem 1rem 2rem;
+    }
+
+    .create-department-header {
+        gap: 1rem;
+        padding-top: 2rem;
+    }
+
+    .create-department-header img {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .create-department-form {
+        padding: 1.5rem 1rem;
+    }
+}

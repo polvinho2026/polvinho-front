@@ -106,6 +106,7 @@ export function createSidebar(user = {}) {
     asideFooter.classList.add('aside-footer')
 
     const createButton = createDefaultButton({title: 'Criar', size: 'medium', color: 'blue'})
+    createButton.addEventListener('click', () => updateUrl('/criar-departamento'))
 
     const logoutButton = createDefaultButton({
         title: 'Sair',
