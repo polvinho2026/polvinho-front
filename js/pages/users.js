@@ -5,10 +5,19 @@ import { createSelectionButtons } from "../components/selectionButtons.js";
 import { createSelectionInfo } from "../components/selectionInfo.js";
 import { createUserProfileImage } from "../components/userProfileImage.js";
 import { getUsers, deleteUser } from "../api/users.js";
+import { createFilterModal } from "../components/filterModal.js";
+import { createConfirmModal } from "../components/confirmModal.js";
+import { updateUrl } from "../core/router.js";
 
 export function renderUsersPage(userLogged, usersResponse) {
 
     const usersPage = document.createElement('main')
+
+    let currentFilters = { //guarda o que o usuário está filtrando, para quando ele mudar de página, os filtros continuarem aplicados
+        name: '',
+        role: '',
+        includeExcluded: false
+    };
 
     const pageHeader = document.createElement('div')
     pageHeader.classList.add('page-header')
@@ -37,6 +46,11 @@ export function renderUsersPage(userLogged, usersResponse) {
     searchInput.name = 'search-input'
     searchInput.placeholder = 'Pesquisar usuário'
 
+    searchInput.addEventListener('input', (event) => {
+        currentFilters.name = event.target.value;
+        applyFilters();
+    });
+
     searchBox.appendChild(searchImage)
     searchBox.appendChild(searchInput)
 
@@ -64,6 +78,10 @@ export function renderUsersPage(userLogged, usersResponse) {
 
     const filterUsersButton = createIconButton({icon: 'assets/images/filter.svg', size: 'medium'})
 
+    const filterMenuContainer = document.createElement('div')
+    filterMenuContainer.classList.add('filter-menu-container')
+    filterMenuContainer.appendChild(filterUsersButton)
+
     const selectionInfo = createSelectionInfo()
     const selectedUsers = new Set()
     const selectionButtons = createSelectionButtons()
@@ -75,7 +93,7 @@ export function renderUsersPage(userLogged, usersResponse) {
         selectionInfo.cleanButton.disabled = selectionCount === 0
     }
 
-    usersCardButtonsSecondSession.appendChild(filterUsersButton)
+    usersCardButtonsSecondSession.appendChild(filterMenuContainer)
     usersCardButtonsSecondSession.appendChild(selectionInfo)
 
     usersCardButtons.appendChild(usersCardButtonsFirstSession)
@@ -138,6 +156,12 @@ export function renderUsersPage(userLogged, usersResponse) {
 
                 visualizeButton.appendChild(visualizeIcon)
 
+                visualizeButton.addEventListener('click', () => {
+                    localStorage.setItem('visualizeUserId', user.id);
+                    updateUrl('/detalhe-usuario');
+                });
+
+            
                 const selectInput = document.createElement('input')
                 selectInput.type = 'checkbox'
                 selectInput.name = 'select-input'
@@ -172,12 +196,29 @@ export function renderUsersPage(userLogged, usersResponse) {
         onPageChange: async (page) => {
             const response = await getUsers({
                 page,
-                limit: usersResponse.pagination.limit
+                limit: usersResponse.pagination.limit,
+                name: currentFilters.name, 
+                role: currentFilters.role, 
+                includeExcluded: currentFilters.includeExcluded 
             })
-
             usersTable.update(response)
         }
-    })
+        })
+
+    async function applyFilters() {
+        try {
+            const response = await getUsers({
+                page: 1, 
+                limit: usersResponse.pagination.limit,
+                name: currentFilters.name,
+                role: currentFilters.role,
+                includeExcluded: currentFilters.includeExcluded
+            });
+            usersTable.update(response);
+        } catch (error) {
+            console.error("Erro ao aplicar filtros:", error);
+        }
+    }
 
     selectionInfo.cleanButton.addEventListener('click', () => {
         selectedUsers.clear()
@@ -188,29 +229,70 @@ export function renderUsersPage(userLogged, usersResponse) {
     })
 
     const deleteButton = selectionButtons.querySelector('.red');
-
     if (deleteButton) {
         deleteButton.addEventListener('click', async () => {
             if (selectedUsers.size === 0) return;
-
-            const confirmacao = confirm(`Tem certeza que deseja excluir ${selectedUsers.size} usuário(s)?`);
-
-            if (confirmacao) {
+            
+            createConfirmModal({
+            title: 'Confirmar Exclusão',
+            message: `Tem certeza que você deseja excluir ${selectedUsers.size} usuário(s)?`,
+            onConfirm: async () => {
                 try {
-                    for (const user of selectedUsers) {
-                        await deleteUser(user.id);
-                }
-
-                alert('Usuários excluídos com sucesso!');
-                window.location.reload();
-
+                    for (const userId of selectedUsers) {
+                        await deleteUser(userId);
+                    }
+                    
+                    alert('Usuários excluídos com sucesso!');
+                    window.location.reload();
                 } catch (error) {
                     alert('Erro ao excluir usuário. Verifique a conexão com o backend.');
                 }
             }
         });
-    }
+    });
+}
 
+    const filterSessions = [
+        {
+            name: 'role',
+            title: 'Papel',
+            filters: [
+                {title: 'Administrador', value: 'admin'},
+                {title: 'Coordenador', value: 'coordinator'},
+                {title: 'Professor', value: 'professor'},
+                {title: 'Aluno', value: 'student'},
+            ]
+        },
+        {
+            name: 'status',
+            title: 'Status',
+            filters: [
+                {title: 'Ativos', value: 'active', buttonType: 'radio'},
+                {title: 'Excluídos', value: 'excluded', buttonType: 'radio'},
+            ]
+        }
+    ]
+
+   const filterModal = createFilterModal({
+        sessions: filterSessions,
+        onFilter: (selectedFilters) => {
+            
+            currentFilters.role = selectedFilters.role && selectedFilters.role.length > 0 
+            ? selectedFilters.role.join(',') 
+            : '';
+
+            
+            const status = selectedFilters.status && selectedFilters.status.length > 0 
+                ? selectedFilters.status[0] 
+                : 'active';
+            currentFilters.includeExcluded = (status === 'excluded');
+
+            applyFilters();
+        }
+    });
+
+    filterUsersButton.addEventListener('click', filterModal.open)
+    filterMenuContainer.appendChild(filterModal)
 
     usersCard.appendChild(usersCardButtons)
     usersCard.appendChild(usersTable)

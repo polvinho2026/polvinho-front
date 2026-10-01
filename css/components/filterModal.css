@@ -1,0 +1,126 @@
+.filter-modal {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 1000;
+
+    display: block;
+}
+
+.filter-modal[hidden] {
+    display: none;
+}
+
+.filter-modal-content {
+    width: min(20rem, calc(100vw - 2rem));
+    max-height: min(28rem, calc(100dvh - 6rem));
+    padding: 1.25rem;
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.75rem 2rem rgb(23 23 23 / 18%);
+}
+
+.filter-menu-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.filter-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.filter-modal-header h2 {
+    color: var(--color-text-heading);
+    font-size: 1.125rem;
+}
+
+.filter-modal-body {
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.filter-session {
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.filter-session h3 {
+    margin: 0 0 0.75rem;
+    color: var(--color-text-heading);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 2rem;
+}
+
+.filter-container input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.filter-title {
+    flex: 1;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.filter-container:hover .filter-title {
+    color: var(--color-text-heading);
+}
+
+.filter-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-subtle);
+    flex-shrink: 0;
+}
+
+.filter-modal-button {
+    min-width: 5.75rem;
+    min-height: 2.1875rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.1s ease;
+}
+
+.filter-modal-button.cancel {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+}
+
+.filter-modal-button.cancel:hover {
+    background-color: var(--color-surface-hover);
+}
+
+.filter-modal-button.apply {
+    background-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+}
+
+.filter-modal-button.apply:hover {
+    background-color: var(--color-primary-hover);
+}
