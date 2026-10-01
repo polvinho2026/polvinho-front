@@ -1,0 +1,40 @@
+.div-input-group{
+    width: 37.875rem;
+    height: 9.5rem;
+
+    gap: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+.label-group{
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.label-radius{
+    width: calc(50% - 6px);
+
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 12px;
+
+    display: flex;;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    
+    cursor: pointer;
+    
+}
+
+.div-select-role{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+
+}

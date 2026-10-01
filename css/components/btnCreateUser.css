@@ -1,0 +1,15 @@
+.btn-create-user{
+  width: 37.875rem;
+  height: 3.25rem;
+  margin-top: 1.5rem; 
+  padding: 12px;
+  background-color: #60A5FA;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
