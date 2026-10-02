@@ -4,6 +4,7 @@ import { getUsers } from "./api/users.js"
 import { startRouter } from "./core/router.js"
 import { renderUserDetailsPage } from "./pages/userDetails.js";
 import { renderCreateDepartmentPage, renderDepartmentsPage } from "./pages/department.js"
+import { formCreateUser } from "./pages/createUser.js";
 
 const app = document.getElementById('app')
 
@@ -36,8 +37,12 @@ async function startApp() {
             return await renderUserDetailsPage(user);
         },
 
+        
         '/criar-departamento': () => renderCreateDepartmentPage(),
-        '/departamentos': () => renderDepartmentsPage(),
+        '/Departamentos': () => renderDepartmentsPage(),
+        '/criar-usuario': () => formCreateUser(),
+        
+
 
         '*': () => {
             const notFound = document.createElement('main')

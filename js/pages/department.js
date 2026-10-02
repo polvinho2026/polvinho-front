@@ -54,8 +54,7 @@ export function renderCreateDepartmentPage() {
     tabs.classList.add('create-department-tabs')
     const userTab = createDefaultButton({ title: 'Usuário', color: 'white' })
     userTab.type = 'button'
-    userTab.disabled = true
-    userTab.title = 'Criação de usuários ainda não disponível'
+    userTab.addEventListener('click', ()=> updateUrl('/criar-usuario'))
     const departmentTab = createDefaultButton({ title: 'Departamento', color: 'white' })
     departmentTab.type = 'button'
     departmentTab.classList.add('is-active')

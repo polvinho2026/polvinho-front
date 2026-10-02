@@ -4,6 +4,11 @@ import { inputRadius } from "../components/inputRadius.js";
 import { validateDate } from "../utils/validateDate.js";
 import { validateRegistration } from "../utils/validateRegistration.js";
 import { validationCpf } from "../utils/validationCPF.js";
+import { validationName } from "../utils/validationName.js";
+import { dateAmerican } from "../utils/dateAmerican.js";
+import { postUser } from "../api/users.js";
+import { updateUrl } from "../core/router.js";
+
 
 export function formCreateUser(){
 
@@ -22,6 +27,10 @@ export function formCreateUser(){
         'btn-exit',
         '<img src= "./assets/images/return.svg">' 
     )
+    btnExit.addEventListener('click', (e) =>{
+        e.preventDefault()
+        updateUrl('/usuarios')
+    })
 
     const headerConteudo = document.createElement('div')
     headerConteudo.classList.add('header-conteudo')
@@ -44,10 +53,15 @@ export function formCreateUser(){
     const hashUser = document.createElement('a')
     hashUser.href= "#Usuários"
     hashUser.innerText = "Usuário"
+    hashUser.classList.add('active')
 
     const hashDep = document.createElement('a')
-    hashDep.href = '#Departamentos'
+    hashDep.addEventListener('click', (e) => {
+        e.preventDefault()
+        updateUrl('criar-departamento')
+    })
     hashDep.innerText = 'Departamento'
+    hashDep.classList.add('cursor')
 
     const divForm = document.createElement('div')
     divForm.classList.add('div-form')
@@ -97,9 +111,51 @@ export function formCreateUser(){
         '000.000.000-00',
         'CPF',
         '14',
-        '\d{3}\.\d{3}\.\d{3}-\d{2}'
         
     )
+
+    let cpfSubString = inputCpf.querySelector('input')
+    cpfSubString.addEventListener('input', (e)=>{
+        let replaceCpf = cpfSubString.value.replace(/\D/g, '')
+        let formattedCpf = replaceCpf
+        if(replaceCpf.length > 9){
+            formattedCpf =
+            replaceCpf.substring(0, 3) + '.' +
+            replaceCpf.substring(3, 6) + '.' +
+            replaceCpf.substring(6, 9) + '-' +
+            replaceCpf.substring(9, 11);
+        }else if(replaceCpf.length > 6){
+            formattedCpf =
+            replaceCpf.substring(0, 3) + '.' +
+            replaceCpf.substring(3, 6) + '.' +
+            replaceCpf.substring(6, 9)
+        } else if (replaceCpf.length > 3){
+            formattedCpf =
+            replaceCpf.substring(0, 3) + '.' +
+            replaceCpf.substring(3, 6)
+        }
+       
+        e.target.value = formattedCpf
+    })
+
+    let dateSubstring = inputDate.querySelector('input')
+    dateSubstring.addEventListener('input', (e)=>{
+        let replaceDate = dateSubstring.value.replace(/\D/g, '')
+        let formattedDate = replaceDate
+        if(replaceDate.length > 4){
+            formattedDate =
+            replaceDate.substring(0, 2) + '/' +
+            replaceDate.substring(2, 4) + '/'+
+            replaceDate.substring(4, 8)
+
+        }else if(replaceDate.length > 2){
+            formattedDate = 
+            replaceDate.substring(0, 2) + '/' +
+            replaceDate.substring(2, 4)
+        }
+
+        e.target.value = formattedDate
+    })
 
     const divInputGroup = document.createElement('div')
     divInputGroup.classList.add('div-input-group')
@@ -188,26 +244,71 @@ export function formCreateUser(){
     mainForm.appendChild(divForm)
     mainContent.appendChild(mainForm)
 
-    mainForm.addEventListener('submit', (event)=>{
+    mainForm.addEventListener('submit', async (event)=>{
         event.preventDefault()
 
-        const user = inputName.value
-        const email = inputEmail.value
-        const cpf = inputCpf.value
-        const date = inputDate.value
-        const registration = inputRegistration.value
-
         try{
-            if(validationCpf(cpf) === false){
-                throw new Error('CPF inválido')
-            }
-            validateDate(date)
-            validateRegistration(registration)
-        }catch(erro){
-            alert(erro.message)
-        }
-    })
+            const user = inputName.querySelector('#input-full-name').value
+            const email = inputEmail.querySelector('#register-email').value
+            const cpf = inputCpf.querySelector('#register-cpf').value
+            const date = inputDate.querySelector('#register-birth').value
+            const registration = inputRegistration.querySelector('#input-num-registration').value
 
+            const role = document.querySelector('input[name="role"]:checked')
+            const roleChecked = role ? role.value : null;
+
+
+            if (user === "" || email === "" ||cpf === "" || date === "" || registration === "" || roleChecked === null){
+                throw new Error('Todos os campos devem ser preenchidos.')
+            }
+            if(validationCpf(cpf) === false){
+                throw new Error('CPF inválido.')
+            }
+            const regex = /\D/g
+            const cpfReplace = cpf.replace(regex, "")
+            
+            validateRegistration(registration)
+            validateDate(date)
+            validationName(user)
+
+            const newUser = {
+            name: user,
+            email: email,
+            cpf: cpfReplace, 
+            birth_date: dateAmerican(date),
+            registration: registration,
+            role: roleChecked,
+            password: registration
+        }
+
+            await postUser(newUser)
+
+            const messageSuccess = document.createElement('div')
+            messageSuccess.textContent = 'Usuário criado com sucesso!'
+            messageSuccess.classList.add('message-success')
+
+            document.body.appendChild(messageSuccess)
+
+            setTimeout(()=> {
+                messageSuccess.classList.add('show');
+            }, 10)
+
+            setTimeout(()=> {
+                messageSuccess.classList.remove('show')
+
+                setTimeout(()=>{
+                    messageSuccess.remove()
+                }, 500)
+
+            }, 3000)
+
+            mainForm.reset()
+
+        }catch(error){
+            alert(error.message)
+        }
+
+    })
 
     return mainContent
 }

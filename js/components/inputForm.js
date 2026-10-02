@@ -10,8 +10,12 @@ export function inputForm(id, type, placeholder, label, maxLenght = null, patter
     const inputText = document.createElement("input")
     inputText.id = id
     inputText.type = type
-    inputText.maxLength = maxLenght
-    inputText.pattern = pattern
+    if(maxLenght !== null){
+        inputText.maxLength = maxLenght
+    }
+    if(pattern !== null){
+        inputText.pattern = pattern
+    }
     inputText.placeholder = placeholder
     inputText.className = "input-form"
 

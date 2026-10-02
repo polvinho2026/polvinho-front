@@ -1,4 +1,4 @@
-function validationCpf(cpf){
+export function validationCpf(cpf){
 
     const regex = /\D/g
     const cpfReplace = cpf.replace(regex, "")
@@ -15,18 +15,12 @@ function validationCpf(cpf){
         return false
     }
 
-    let multiplicador = 10
-    let soma = 0
+    let multiplicator = 10
+    let sum = 0
     for(let i = 0; i < cpfReplace.length - 2; i++){
-<<<<<<< Updated upstream:js/utils/validationCPF.js
-        const firstChecker = cpfReplace[i] * multiplicador
-        multiplicador -= 1
-        soma = firstChecker + soma
-=======
         const firstChecker = cpfReplace[i] * multiplicator
         multiplicator -= 1
         sum = firstChecker + sum
->>>>>>> Stashed changes:src/js/utils/validationCPF.js
     }
 
     let firstChecker = sum % 11
@@ -41,18 +35,12 @@ function validationCpf(cpf){
         return false
     }
 
-    multiplicador = 11
-    soma = 0
+    multiplicator = 11
+    sum = 0
     for(let i = 0; i < cpfReplace.length - 1; i++){
-<<<<<<< Updated upstream:js/utils/validationCPF.js
-        const secondChecker = cpfReplace[i] * multiplicador
-        multiplicador -= 1
-        soma = secondChecker + soma
-=======
         const secondChecker = cpfReplace[i] * multiplicator
         multiplicator -= 1
         sum = secondChecker + sum
->>>>>>> Stashed changes:src/js/utils/validationCPF.js
     }
 
     let secondChecker = sum % 11
@@ -69,10 +57,4 @@ function validationCpf(cpf){
 
     return true
 }
-<<<<<<< Updated upstream:js/utils/validationCPF.js
 
-validationCpf("144.657.679-51")
-
-console.log(validationCpf("144.657.679-51"))
-=======
->>>>>>> Stashed changes:src/js/utils/validationCPF.js
