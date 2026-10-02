@@ -70,6 +70,7 @@ export function renderUsersPage(userLogged, usersResponse) {
             color: 'blue',
             borderRadius: 'border-radius-rounded'
         })
+        createUserButton.addEventListener('click', ()=> updateUrl('/criar-usuario'))
         usersCardButtonsFirstSession.appendChild(createUserButton)
     }
 
