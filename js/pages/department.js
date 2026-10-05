@@ -1,21 +1,64 @@
 import { createDefaultButton } from '../components/defaultButton.js'
 import { createIconButton } from '../components/iconButton.js'
 import { updateUrl } from '../core/router.js'
-import { createDepartment } from '../api/departments.js'
+import { createDepartment, getDepartments } from '../api/departments.js'
+import { createListTable } from '../components/listTable.js'
 
-export function renderDepartmentsPage() {
+export async function renderDepartmentsPage(userLogged) {
+    const departments = await getDepartments()
     const page = document.createElement('main')
-    page.classList.add('create-department-page')
-    const content = document.createElement('div')
-    content.classList.add('create-department-content', 'departments-content')
-    const heading = document.createElement('h1')
+    page.classList.add('departments-page')
+
+    const header = document.createElement('header')
+    header.classList.add('page-header')
+    const logo = document.createElement('img')
+    logo.src = 'assets/images/logo.png'
+    logo.alt = 'Polvinho'
+    const heading = document.createElement('h2')
     heading.textContent = 'Departamentos'
-    const description = document.createElement('p')
-    description.textContent = 'A listagem de departamentos ainda não está disponível.'
-    const createButton = createDefaultButton({ title: 'Criar Departamento', color: 'blue' })
-    createButton.addEventListener('click', () => updateUrl('/criar-departamento'))
-    content.append(heading, description, createButton)
-    page.appendChild(content)
+    header.append(logo, heading)
+
+    const content = document.createElement('div')
+    content.classList.add('content')
+    const card = document.createElement('section')
+    card.classList.add('users-card')
+
+    if (userLogged.role === 'administrador') {
+        const toolbar = document.createElement('div')
+        toolbar.classList.add('users-card-buttons')
+        const createButton = createDefaultButton({ title: 'Criar', color: 'blue', size: 'small' })
+        createButton.addEventListener('click', () => updateUrl('/criar-departamento'))
+        toolbar.appendChild(createButton)
+        card.appendChild(toolbar)
+    }
+
+    const table = createListTable({
+        columns: [
+            { key: 'entity_code', title: 'CÓDIGO', width: '1fr' },
+            { key: 'title', title: 'TÍTULO', width: '2fr' },
+            {
+                title: 'AÇÕES', width: '0.5fr',
+                render: department => {
+                    const button = createIconButton({ icon: 'assets/images/visualize.svg', size: 'small' })
+                    button.setAttribute('aria-label', `Visualizar ${department.title}`)
+                    button.addEventListener('click', () => {
+                        localStorage.setItem('visualizeDepartmentId', department.id)
+                        updateUrl('/detalhe-departamento')
+                    })
+                    return button
+                }
+            }
+        ],
+        data: departments.data,
+        pagination: departments.pagination,
+        emptyMessage: 'Nenhum departamento encontrado.',
+        onPageChange: async page => {
+            table.update(await getDepartments({ page, limit: departments.pagination.limit }))
+        }
+    })
+    card.appendChild(table)
+    content.appendChild(card)
+    page.append(header, content)
     return page
 }
 

@@ -6,15 +6,26 @@ import { getCurrentRoutePath, updateUrl } from "../core/router.js"
 export function createSidebar(user = {}) {
     const aside = document.createElement('aside')
     aside.classList.add('aside-default')
+    const mobileScreen = window.matchMedia('(max-width: 48rem)')
 
     const asideHeader = document.createElement('div')
     asideHeader.classList.add('aside-header')
 
     const toggleSideBar = createIconButton({icon: 'assets/images/menuButton.svg', size: 'medium'})
+    toggleSideBar.type = 'button'
+    toggleSideBar.setAttribute('aria-controls', 'sidebar-content')
+
+    function setCollapsed(collapsed) {
+        aside.classList.toggle('collapsed-sidebar', collapsed)
+        toggleSideBar.setAttribute('aria-expanded', String(!collapsed))
+        toggleSideBar.setAttribute('aria-label', collapsed ? 'Abrir menu' : 'Recolher menu')
+    }
 
     toggleSideBar.addEventListener('click', () => {
-        aside.classList.toggle('collapsed-sidebar')
+        setCollapsed(!aside.classList.contains('collapsed-sidebar'))
     })
+    setCollapsed(mobileScreen.matches)
+    mobileScreen.addEventListener('change', event => setCollapsed(event.matches))
 
     asideHeader.appendChild(toggleSideBar)
 
@@ -31,7 +42,7 @@ export function createSidebar(user = {}) {
     userInfoMessage.innerText = `Olá, ${user.name}!`
 
     const userInfoRole = document.createElement('p')
-    userInfoRole.innerText = `(${user.role})` ?? '(aluno)'
+    userInfoRole.innerText = `(${user.role ?? 'aluno'})`
 
     asideUserInfo.appendChild(userInfoAvatar)
     asideUserInfo.appendChild(userInfoMessage)
@@ -86,6 +97,7 @@ export function createSidebar(user = {}) {
         button.addEventListener('click', (event) => {
             event.preventDefault()
             updateUrl(item.path)
+            if (mobileScreen.matches) setCollapsed(true)
         })
     })
 
@@ -93,7 +105,8 @@ export function createSidebar(user = {}) {
         const currentPath = getCurrentRoutePath()
 
         buttonsByPath.forEach((button, path) => {
-            const isSelected = path === currentPath
+            const isSelected = path === currentPath ||
+                (path === '/departamentos' && currentPath === '/detalhe-departamento')
             button.classList.toggle('blue', isSelected)
             button.classList.toggle('white', !isSelected)
         })
@@ -106,7 +119,10 @@ export function createSidebar(user = {}) {
     asideFooter.classList.add('aside-footer')
 
     const createButton = createDefaultButton({title: 'Criar', size: 'medium', color: 'blue'})
-    createButton.addEventListener('click', () => updateUrl('/criar-departamento'))
+    createButton.addEventListener('click', () => {
+        updateUrl('/criar-departamento')
+        if (mobileScreen.matches) setCollapsed(true)
+    })
 
     const logoutButton = createDefaultButton({
         title: 'Sair',
@@ -119,10 +135,11 @@ export function createSidebar(user = {}) {
     asideFooter.appendChild(createButton)
     asideFooter.appendChild(logoutButton)
 
-    aside.appendChild(asideHeader)
-    aside.appendChild(asideUserInfo)
-    aside.appendChild(asideNavigationMenu)
-    aside.appendChild(asideFooter)
+    const sidebarContent = document.createElement('div')
+    sidebarContent.id = 'sidebar-content'
+    sidebarContent.classList.add('aside-content')
+    sidebarContent.append(asideUserInfo, asideNavigationMenu, asideFooter)
+    aside.append(asideHeader, sidebarContent)
 
     return aside
 }
