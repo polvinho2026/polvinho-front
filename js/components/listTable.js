@@ -3,6 +3,8 @@ export function createListTable({
     data = [],
     pagination = {},
     visibleRows = 4,
+    emptyMessage = 'Nenhum usuário encontrado.',
+    hideSinglePagePagination = false,
     onPageChange
 }) {
     let currentData = data
@@ -62,6 +64,7 @@ export function createListTable({
 
     function renderRows() {
         tableBody.replaceChildren()
+        table.classList.toggle('is-empty', currentData.length === 0)
 
         currentData.forEach(item => {
             const row = document.createElement('div')
@@ -91,13 +94,14 @@ export function createListTable({
         })
 
         if (currentData.length === 0) {
-            const emptyMessage = document.createElement('p')
-            emptyMessage.classList.add('list-table-empty')
-            emptyMessage.textContent = 'Nenhum usuário encontrado.'
-            tableBody.appendChild(emptyMessage)
+            const message = document.createElement('p')
+            message.classList.add('list-table-empty')
+            message.textContent = emptyMessage
+            tableBody.appendChild(message)
         }
 
         pageInformation.textContent = loadError || `Página ${currentPage} de ${totalPages}`
+        paginationControls.hidden = hideSinglePagePagination && totalPages === 1 && !loadError
 
         previousButton.disabled = isLoading || currentPage === 1
         nextButton.disabled = isLoading || currentPage === totalPages
