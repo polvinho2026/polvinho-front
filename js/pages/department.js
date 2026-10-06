@@ -3,49 +3,108 @@ import { createIconButton } from '../components/iconButton.js'
 import { updateUrl } from '../core/router.js'
 import { createDepartment, getDepartments } from '../api/departments.js'
 import { createListTable } from '../components/listTable.js'
+import { createSelectionInfo } from '../components/selectionInfo.js'
+import { createSelectionButtons } from '../components/selectionButtons.js'
 
 export async function renderDepartmentsPage(userLogged) {
     const departments = await getDepartments()
+
     const page = document.createElement('main')
     page.classList.add('departments-page')
 
     const header = document.createElement('header')
     header.classList.add('page-header')
+    
     const logo = document.createElement('img')
     logo.src = 'assets/images/logo.png'
     logo.alt = 'Polvinho'
+    
     const heading = document.createElement('h2')
     heading.textContent = 'Departamentos'
     header.append(logo, heading)
 
     const content = document.createElement('div')
     content.classList.add('content')
+
+    
+    const searchBox = document.createElement('div')
+    searchBox.classList.add('search-input-box')
+    const searchImage = document.createElement('img')
+    searchImage.src = 'assets/images/search.svg'
+    const searchInput = document.createElement('input')
+    searchInput.classList.add('search-input-default')
+    searchInput.type = 'search'
+    searchInput.placeholder = 'Pesquisar'
+    searchBox.append(searchImage, searchInput)
+
     const card = document.createElement('section')
     card.classList.add('users-card')
 
+    const toolbar = document.createElement('div')
+    toolbar.classList.add('users-card-buttons')
+
+    const toolbarFirstSession = document.createElement('div')
+    toolbarFirstSession.classList.add('users-card-button-first-session')
+
     if (userLogged.role === 'administrador') {
-        const toolbar = document.createElement('div')
-        toolbar.classList.add('users-card-buttons')
         const createButton = createDefaultButton({ title: 'Criar', color: 'blue', size: 'small' })
         createButton.addEventListener('click', () => updateUrl('/criar-departamento'))
-        toolbar.appendChild(createButton)
-        card.appendChild(toolbar)
+        toolbarFirstSession.appendChild(createButton)
     }
 
+    const toolbarSecondSession = document.createElement('div')
+    toolbarSecondSession.classList.add('users-card-button-second-session')
+
+    
+    const selectionInfo = createSelectionInfo()
+    const selectedDepartments = new Set()
+    toolbarSecondSession.appendChild(selectionInfo)
+
+    toolbar.append(toolbarFirstSession, toolbarSecondSession)
+    card.appendChild(toolbar)
+
+    
+    const selectionButtons = createSelectionButtons()
+
+    function updateSelection() {
+        const count = selectedDepartments.size
+        selectionInfo.updateCounter(count)
+        selectionButtons.updateSelection(count)
+        selectionInfo.cleanButton.disabled = count === 0
+    }
+
+    
     const table = createListTable({
         columns: [
-            { key: 'entity_code', title: 'CÓDIGO', width: '1fr' },
             { key: 'title', title: 'TÍTULO', width: '2fr' },
+            { key: 'entity_code', title: 'CÓDIGO', width: '1fr' },
             {
                 title: 'AÇÕES', width: '0.5fr',
                 render: department => {
-                    const button = createIconButton({ icon: 'assets/images/visualize.svg', size: 'small' })
-                    button.setAttribute('aria-label', `Visualizar ${department.title}`)
-                    button.addEventListener('click', () => {
+                    const rowButtons = document.createElement('div')
+                    
+                    rowButtons.classList.add('department-row-actions')
+
+                    const visualizeButton = createIconButton({ icon: 'assets/images/visualize.svg', size: 'small' })
+                    visualizeButton.setAttribute('aria-label', `Visualizar ${department.title}`)
+                    visualizeButton.addEventListener('click', () => {
                         localStorage.setItem('visualizeDepartmentId', department.id)
                         updateUrl('/detalhe-departamento')
                     })
-                    return button
+
+                    const selectInput = document.createElement('input')
+                    selectInput.type = 'checkbox'
+                    selectInput.classList.add('select-input')
+                    selectInput.checked = selectedDepartments.has(department.id)
+                    selectInput.setAttribute('aria-label', `Selecionar ${department.title}`)
+                    selectInput.addEventListener('change', (event) => {
+                        if (event.target.checked) selectedDepartments.add(department.id)
+                        else selectedDepartments.delete(department.id)
+                        updateSelection()
+                    })
+
+                    rowButtons.append(visualizeButton, selectInput)
+                    return rowButtons
                 }
             }
         ],
@@ -56,9 +115,21 @@ export async function renderDepartmentsPage(userLogged) {
             table.update(await getDepartments({ page, limit: departments.pagination.limit }))
         }
     })
+
+    
+    selectionInfo.cleanButton.addEventListener('click', () => {
+        selectedDepartments.clear()
+        table.querySelectorAll('.select-input').forEach(input => input.checked = false)
+        updateSelection()
+    })
+
+    updateSelection()
     card.appendChild(table)
-    content.appendChild(card)
+
+   
+    content.append(searchBox, card, selectionButtons)
     page.append(header, content)
+
     return page
 }
 
