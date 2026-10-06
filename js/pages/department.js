@@ -1,10 +1,11 @@
 import { createDefaultButton } from '../components/defaultButton.js'
 import { createIconButton } from '../components/iconButton.js'
 import { updateUrl } from '../core/router.js'
-import { createDepartment, getDepartments } from '../api/departments.js'
 import { createListTable } from '../components/listTable.js'
 import { createSelectionInfo } from '../components/selectionInfo.js'
 import { createSelectionButtons } from '../components/selectionButtons.js'
+import { createConfirmModal } from '../components/confirmModal.js';
+import { createDepartment, getDepartments, deleteDepartment } from '../api/departments.js';
 
 export async function renderDepartmentsPage(userLogged) {
     const departments = await getDepartments()
@@ -65,6 +66,35 @@ export async function renderDepartmentsPage(userLogged) {
 
     
     const selectionButtons = createSelectionButtons()
+
+    if (selectionButtons.deleteButton) {
+        selectionButtons.deleteButton.addEventListener('click', async () => {
+            
+            if (selectedDepartments.size === 0) return;
+
+            
+            createConfirmModal({
+                title: 'Confirmar Exclusão',
+                message: `Tem certeza que deseja excluir ${selectedDepartments.size} departamento(s)? Todos os cursos e usuários vinculados serão desassociados ou excluídos.`,
+                onConfirm: async () => {
+                    try {
+                        
+                        for (const deptId of selectedDepartments) {
+                            await deleteDepartment(deptId);
+                        }
+                        
+                        alert('Departamento(s) excluído(s) com sucesso!');
+                        
+                        
+                        window.location.reload(); 
+                    } catch (error) {
+                        console.error(error);
+                        alert(error.message || 'Erro ao excluir departamento. Verifique a conexão com o backend.');
+                    }
+                }
+            });
+        });
+    }
 
     function updateSelection() {
         const count = selectedDepartments.size
