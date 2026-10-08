@@ -10,6 +10,8 @@ import { createDepartment, getDepartments, deleteDepartment } from '../api/depar
 export async function renderDepartmentsPage(userLogged) {
     const departments = await getDepartments()
 
+    let currentSearch = '';
+
     const page = document.createElement('main')
     page.classList.add('departments-page')
 
@@ -36,6 +38,17 @@ export async function renderDepartmentsPage(userLogged) {
     searchInput.classList.add('search-input-default')
     searchInput.type = 'search'
     searchInput.placeholder = 'Pesquisar'
+
+    searchInput.addEventListener('input', async (event) => {
+        currentSearch = event.target.value;
+        const filteredDepartments = await getDepartments({ 
+            page: 1, 
+            limit: departments.pagination.limit, 
+            title: currentSearch 
+        });
+        table.update(filteredDepartments);
+    });
+
     searchBox.append(searchImage, searchInput)
 
     const card = document.createElement('section')
@@ -142,7 +155,11 @@ export async function renderDepartmentsPage(userLogged) {
         pagination: departments.pagination,
         emptyMessage: 'Nenhum departamento encontrado.',
         onPageChange: async page => {
-            table.update(await getDepartments({ page, limit: departments.pagination.limit }))
+            table.update(await getDepartments({ 
+                page, 
+                limit: departments.pagination.limit, 
+                title: currentSearch 
+            }))
         }
     })
 

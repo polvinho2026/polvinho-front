@@ -1,14 +1,16 @@
 const BASE_URL = 'http://localhost:3000';
 
-export async function getDepartments({ page = 1, limit = 20 } = {}) {
+export async function getDepartments({ page = 1, limit = 20, title, entity_code } = {}) {
     const query = new URLSearchParams({ page, limit });
-    const response = await fetch(`${BASE_URL}/departments?${query}`);
+    
+    if (title) query.set('title', title);
+    if (entity_code) query.set('entity_code', entity_code);
 
+    const response = await fetch(`${BASE_URL}/departments?${query}`);
     if (!response.ok) {
         const error = await response.json();
         throw new Error(error.message || 'Não foi possível carregar os departamentos.');
     }
-
     return response.json();
 }
 
@@ -58,7 +60,7 @@ export async function deleteDepartment(departmentId) {
             const errorData = await response.json();
             message = errorData.message || message;
         } catch {
-            // Mantém a mensagem padrão
+            
         }
         throw new Error(message);
     }
