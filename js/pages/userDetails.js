@@ -2,6 +2,7 @@ import { getUserById, deleteUser } from "../api/users.js";
 import { createDefaultButton } from "../components/defaultButton.js";
 import { createConfirmModal } from "../components/confirmModal.js";
 import { updateUrl } from "../core/router.js";
+import { dateBrazil } from "../utils/dateBrazil.js";
 
 export async function renderUserDetailsPage(userLogged) {
 
@@ -40,7 +41,7 @@ export async function renderUserDetailsPage(userLogged) {
 
         const fieldName = createField('Nome Completo', userData.name);
         const fieldEmail = createField('E-mail', userData.email);
-        const fieldBirthDate = createField('Data de Nascimento', userData.birth_date);
+        const fieldBirthDate = createField('Data de Nascimento', dateBrazil(userData.birth_date));
         const fieldRegistration = createField('Matrícula', userData.registration);
         const fieldCpf = createField('CPF', userData.cpf);
         const fieldRole = createIndicatorField('Papel do Usuário', userData.role);
@@ -66,6 +67,10 @@ export async function renderUserDetailsPage(userLogged) {
             borderRadius: 'border-radius-rounded',
             icon: 'assets/images/edit.svg'
         });
+        editButton.addEventListener('click', ()=>{
+            const saveIdUser = localStorage.setItem('idUserEdit', userId)
+            updateUrl('/editar-usuario')
+        })
 
         const deleteButton = createDefaultButton({
             title: 'Excluir Usuário',
