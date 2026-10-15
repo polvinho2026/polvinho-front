@@ -1,0 +1,29 @@
+export function inputForm(id, type, placeholder, label, maxLenght = null, pattern = null, required = false, value){
+
+   const labelForm = document.createElement('label')
+    labelForm.classList.add('label-form')
+    labelForm.htmlFor = id
+
+    const spanForm = document.createElement('span')
+    spanForm.innerHTML = `<span>${label}</span> <span class= 'required'> * </span>`
+    
+    const inputText = document.createElement("input")
+    inputText.id = id
+    inputText.type = type
+    if(maxLenght !== null){
+        inputText.maxLength = maxLenght
+    }
+    if(pattern !== null){
+        inputText.pattern = pattern
+    }
+    inputText.placeholder = placeholder
+    if(value !== null){
+        inputText.value = value || ''
+    }
+    inputText.className = "input-form"
+
+    labelForm.appendChild(spanForm)
+    labelForm.appendChild(inputText)
+    
+    return labelForm
+}

@@ -70,6 +70,7 @@ export function renderUsersPage(userLogged, usersResponse) {
             color: 'blue',
             borderRadius: 'border-radius-rounded'
         })
+        createUserButton.addEventListener('click', ()=> updateUrl('/criar-usuario'))
         usersCardButtonsFirstSession.appendChild(createUserButton)
     }
 
@@ -250,7 +251,18 @@ export function renderUsersPage(userLogged, usersResponse) {
             }
         });
     });
-}
+
+    const editButton = selectionButtons.querySelector('.edit');
+    if (editButton){
+        editButton.addEventListener('click', ()=>{
+            const listUser = Array.from(selectedUsers)
+            const userId = listUser[0]
+            localStorage.setItem('idUserEdit', userId)
+
+            updateUrl('/editar-usuario')});
+    
+    };
+    }
 
     const filterSessions = [
         {

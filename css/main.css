@@ -12,6 +12,9 @@
 @import 'components/confirmModal.css';
 @import url('./pages/userDetails.css');
 
-@import 'pages/users.css';
-@import 'pages/department.css';
-@import 'pages/departmentDetails.css';
+@import './pages/users.css';
+@import './pages/department.css';
+@import './pages/userDetails.css';
+@import './pages/createUser.css';
+@import './components/headerEdit.css';
+@import './pages/departmentDetails.css';

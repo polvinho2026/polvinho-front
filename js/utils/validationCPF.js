@@ -1,4 +1,4 @@
-function validationCpf(cpf){
+export function validationCpf(cpf){
 
     const regex = /\D/g
     const cpfReplace = cpf.replace(regex, "")
@@ -15,15 +15,15 @@ function validationCpf(cpf){
         return false
     }
 
-    let multiplicador = 10
-    let soma = 0
+    let multiplicator = 10
+    let sum = 0
     for(let i = 0; i < cpfReplace.length - 2; i++){
-        const firstChecker = cpfReplace[i] * multiplicador
-        multiplicador -= 1
-        soma = firstChecker + soma
+        const firstChecker = cpfReplace[i] * multiplicator
+        multiplicator -= 1
+        sum = firstChecker + sum
     }
 
-    let firstChecker = soma % 11
+    let firstChecker = sum % 11
 
     if( firstChecker >= 2){
         firstChecker = 11 - firstChecker
@@ -35,15 +35,15 @@ function validationCpf(cpf){
         return false
     }
 
-    multiplicador = 11
-    soma = 0
+    multiplicator = 11
+    sum = 0
     for(let i = 0; i < cpfReplace.length - 1; i++){
-        const secondChecker = cpfReplace[i] * multiplicador
-        multiplicador -= 1
-        soma = secondChecker + soma
+        const secondChecker = cpfReplace[i] * multiplicator
+        multiplicator -= 1
+        sum = secondChecker + sum
     }
 
-    let secondChecker = soma % 11
+    let secondChecker = sum % 11
 
     if( secondChecker>= 2){
         secondChecker = 11 - secondChecker
@@ -58,6 +58,3 @@ function validationCpf(cpf){
     return true
 }
 
-validationCpf("144.657.679-51")
-
-console.log(validationCpf("144.657.679-51"))
