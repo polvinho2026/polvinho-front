@@ -15,4 +15,5 @@
 @import './pages/users.css';
 @import './pages/department.css';
 @import './pages/userDetails.css';
-@import './pages/createUser.css'
+@import './pages/createUser.css';
+@import './components/headerEdit.css'
