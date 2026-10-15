@@ -1,4 +1,4 @@
-export function inputRadius(id, label, value, type, name){
+export function inputRadius(id, label, value, type, name, check){
     const labelRadius = document.createElement('label')
     labelRadius.classList.add('label-radius')
     labelRadius.htmlFor = id 
@@ -10,8 +10,14 @@ export function inputRadius(id, label, value, type, name){
     inputSelect.type = type
     inputSelect.name = name
 
+    if (check === true){
+        inputSelect.checked = true
+    }
+
     const textSpan = document.createElement('span')
     textSpan.textContent = label
+
+
     
     labelRadius.appendChild(inputSelect)
     labelRadius.appendChild(textSpan)
