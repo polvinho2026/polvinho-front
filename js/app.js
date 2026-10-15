@@ -5,6 +5,7 @@ import { startRouter } from "./core/router.js"
 import { renderUserDetailsPage } from "./pages/userDetails.js";
 import { renderCreateDepartmentPage, renderDepartmentsPage } from "./pages/department.js"
 import { formCreateUser } from "./pages/createUser.js";
+import { editUser } from "./pages/editUser.js";
 
 const app = document.getElementById('app')
 
@@ -28,6 +29,9 @@ async function startApp() {
             home.textContent = 'Página inicial'
             return home
         },
+
+        '/criar-usuario': () => formCreateUser(),
+
         '/usuarios': async () => {
             const users = await getUsers()
             return renderUsersPage(user, users)
@@ -37,12 +41,13 @@ async function startApp() {
             return await renderUserDetailsPage(user);
         },
 
+        '/editar-usuario': async () =>{
+            return await editUser()
+        },
+
         
         '/criar-departamento': () => renderCreateDepartmentPage(),
         '/Departamentos': () => renderDepartmentsPage(),
-        '/criar-usuario': () => formCreateUser(),
-        
-
 
         '*': () => {
             const notFound = document.createElement('main')
