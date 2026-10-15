@@ -152,6 +152,7 @@
     font-weight: 600;
     font-size: 14px;
     color: var(--color-text-primary);
+    flex: 1;
 }
 
 .label-form .input-form{
@@ -239,4 +240,10 @@
 
 .message-success.show{
     opacity: 1;
+}
+
+.div-registration{
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
 }
