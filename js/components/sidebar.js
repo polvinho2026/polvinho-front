@@ -121,10 +121,7 @@ export function createSidebar(user = {}) {
 
     const createButton = createDefaultButton({title: 'Criar', size: 'medium', color: 'blue'})
     createButton.addEventListener('click', () => updateUrl('/criar-usuario'))
-    createButton.addEventListener('click', () => {
-        updateUrl('/criar-departamento')
-        if (mobileScreen.matches) setCollapsed(true)
-    })
+
 
     const logoutButton = createDefaultButton({
         title: 'Sair',
