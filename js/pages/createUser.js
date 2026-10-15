@@ -8,6 +8,8 @@ import { validationName } from "../utils/validationName.js";
 import { dateAmerican } from "../utils/dateAmerican.js";
 import { postUser } from "../api/users.js";
 import { updateUrl } from "../core/router.js";
+import { createDefaultButton } from "../components/defaultButton.js";
+import { generateRegistration } from "../utils/generateRegistration.js";
 
 
 export function formCreateUser(){
@@ -94,6 +96,8 @@ export function formCreateUser(){
         'Data de Nascimento',
         '10'
     )
+    const divRegistration = document.createElement('div')
+    divRegistration.classList.add('div-registration')
 
     const inputRegistration = inputForm(
 
@@ -103,6 +107,15 @@ export function formCreateUser(){
         'Matrícula',
         '10'
     )
+
+    const btnRegistration = createDefaultButton({title: 'Gerar Matrícula', size: 'medium', color: 'blue'})
+    btnRegistration.addEventListener('click', (e)=>{
+        e.preventDefault()
+        const randomRegistration = generateRegistration()
+        document.querySelector('#input-num-registration').value = randomRegistration
+    })
+    divRegistration.appendChild(inputRegistration)
+    divRegistration.appendChild(btnRegistration)
 
     const inputCpf= inputForm(
 
@@ -219,7 +232,7 @@ export function formCreateUser(){
     divForm.appendChild(inputName)
     divForm.appendChild(inputEmail)
     divForm.appendChild(inputDate)
-    divForm.appendChild(inputRegistration)
+    divForm.appendChild(divRegistration)
     divForm.appendChild(inputCpf)
 
     liUser.appendChild(hashUser)
