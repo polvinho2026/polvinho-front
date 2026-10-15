@@ -139,3 +139,19 @@
         padding: 1.5rem 1rem;
     }
 }
+
+.departments-page .list-table-cell:first-child {
+    justify-content: flex-start;
+    padding-left: 1rem;
+}
+
+.departments-page .list-table-cell:last-child {
+    justify-content: center;
+}
+
+.departments-page .department-row-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}

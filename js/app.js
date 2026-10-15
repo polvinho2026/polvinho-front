@@ -6,6 +6,7 @@ import { renderUserDetailsPage } from "./pages/userDetails.js";
 import { renderCreateDepartmentPage, renderDepartmentsPage } from "./pages/department.js"
 import { formCreateUser } from "./pages/createUser.js";
 import { editUser } from "./pages/editUser.js";
+import { renderDepartmentDetailsPage } from "./pages/departmentDetails.js";
 
 const app = document.getElementById('app')
 
@@ -47,7 +48,8 @@ async function startApp() {
 
         
         '/criar-departamento': () => renderCreateDepartmentPage(),
-        '/Departamentos': () => renderDepartmentsPage(),
+        '/departamentos': () => renderDepartmentsPage(user),
+        '/detalhe-departamento': () => renderDepartmentDetailsPage(user),
 
         '*': () => {
             const notFound = document.createElement('main')
