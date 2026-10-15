@@ -1,4 +1,4 @@
-export function inputForm(id, type, placeholder, label, maxLenght = null, pattern = null, required = false){
+export function inputForm(id, type, placeholder, label, maxLenght = null, pattern = null, required = false, value){
 
    const labelForm = document.createElement('label')
     labelForm.classList.add('label-form')
@@ -17,6 +17,9 @@ export function inputForm(id, type, placeholder, label, maxLenght = null, patter
         inputText.pattern = pattern
     }
     inputText.placeholder = placeholder
+    if(value !== null){
+        inputText.value = value || ''
+    }
     inputText.className = "input-form"
 
     labelForm.appendChild(spanForm)
