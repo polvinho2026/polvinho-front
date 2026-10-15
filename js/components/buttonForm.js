@@ -8,3 +8,4 @@ export function buttonForm(id, type, className, innerHTML = null){
 
     return btnForm
 }
+
