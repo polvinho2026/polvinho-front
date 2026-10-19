@@ -62,6 +62,7 @@ export function createSidebar(user = {}) {
             path: '/usuarios',
             roles: ['administrador', 'coordenador']
         },
+
         {
             label: 'Departamentos',
             path: '/departamentos',
@@ -119,10 +120,8 @@ export function createSidebar(user = {}) {
     asideFooter.classList.add('aside-footer')
 
     const createButton = createDefaultButton({title: 'Criar', size: 'medium', color: 'blue'})
-    createButton.addEventListener('click', () => {
-        updateUrl('/criar-departamento')
-        if (mobileScreen.matches) setCollapsed(true)
-    })
+    createButton.addEventListener('click', () => updateUrl('/criar-usuario'))
+
 
     const logoutButton = createDefaultButton({
         title: 'Sair',

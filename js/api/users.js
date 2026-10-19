@@ -1,4 +1,25 @@
-const BASE_URL = 'http://localhost:3000'; 
+const BASE_URL = 'http://localhost:3000';
+
+export async function postUser(newUser){
+    const response = await fetch(`${BASE_URL}/users`, {
+        method: 'POST',
+        headers: {
+            'Content-Type' :'application/json',
+        },
+        body: JSON.stringify(newUser)
+    });
+    if(!response.ok){
+        let message = `Erro ao criar usuário: ${response.status}`
+        try{
+            const error = await response.json()
+            message = error.message || message
+        }catch{
+
+        }
+        throw new Error(message)
+    }
+    return response.json();
+}
 
 export async function getUsers({
     page = 1,
@@ -31,6 +52,7 @@ export async function getUsers({
 
         throw new Error(message)
     }
+    console.log(response)
 
     return response.json()
 }
@@ -70,6 +92,28 @@ export async function getUserById(userId) {
         }
 
         throw new Error(message);
+    }
+
+    return response.json();
+}
+
+export async function putUser(userId, updateUser) {
+    const response = await fetch(`${BASE_URL}/users/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type' :'application/json',
+            },
+            body: JSON.stringify(updateUser)
+    });
+    if(!response.ok){
+        let message = `Erro ao editar usuário: ${response.status}`
+        try{
+            const error = await response.json()
+            message = error.message || message
+        }catch{
+
+        }
+        throw new Error(message)
     }
 
     return response.json();

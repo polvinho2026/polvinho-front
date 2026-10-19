@@ -1,0 +1,25 @@
+{
+  "name": "polvinho-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "live-server --open=app.html"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polvinho2026/polvinho-front.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/polvinho2026/polvinho-front/issues"
+  },
+  "homepage": "https://github.com/polvinho2026/polvinho-front#readme"
+}
