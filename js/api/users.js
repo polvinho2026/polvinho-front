@@ -1,27 +1,13 @@
-const BASE_URL = 'http://localhost:3000';
+import { requestAuthenticated } from './client.js';
 
-export async function postUser(newUser){
-    const response = await fetch(`${BASE_URL}/users`, {
+export function postUser(newUser) {
+    return requestAuthenticated('/users', {
         method: 'POST',
-        headers: {
-            'Content-Type' :'application/json',
-        },
-        body: JSON.stringify(newUser)
+        body: newUser
     });
-    if(!response.ok){
-        let message = `Erro ao criar usuário: ${response.status}`
-        try{
-            const error = await response.json()
-            message = error.message || message
-        }catch{
-
-        }
-        throw new Error(message)
-    }
-    return response.json();
 }
 
-export async function getUsers({
+export function getUsers({
     page = 1,
     limit = 20,
     name,
@@ -29,92 +15,46 @@ export async function getUsers({
     role,
     includeExcluded
 } = {}) {
-    const query = new URLSearchParams({ page, limit })
+    const query = new URLSearchParams({ page, limit });
 
-    if (name) query.set('name', name)
-    if (registration) query.set('registration', registration)
-    if (role) query.set('role', role)
+    if (name) {
+        query.set('name', name);
+    }
+
+    if (registration) {
+        query.set('registration', registration);
+    }
+
+    if (role) {
+        query.set('role', role);
+    }
+
     if (includeExcluded !== undefined) {
-        query.set('includeExcluded', includeExcluded)
+        query.set('includeExcluded', includeExcluded);
     }
 
-    const response = await fetch(`${BASE_URL}/users?${query}`)
-
-    if (!response.ok) {
-        let message = `Erro ao buscar usuários: ${response.status}`
-
-        try {
-            const error = await response.json()
-            message = error.message || message
-        } catch {
-            // Mantém a mensagem padrão quando a API não retorna JSON.
-        }
-
-        throw new Error(message)
-    }
-    console.log(response)
-
-    return response.json()
+    return requestAuthenticated(`/users?${query}`);
 }
 
-export const deleteUser = async (userId) => {
-    try {
-        const response = await fetch(`${BASE_URL}/users/${userId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        }); 
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Erro ao excluir o usuário.');
-        }
-        
-        return { message: 'Usuário excluído com sucesso.' }; 
-    } catch (error) {
-        console.error('Erro na API ao tentar deletar:', error);
-        throw error;
-    }
-};
-
-export async function getUserById(userId) {
-    const response = await fetch(`${BASE_URL}/users/${userId}`);
-
-    if (!response.ok) {
-        let message = `Erro ao buscar usuário: ${response.status}`;
-
-        try {
-            const error = await response.json();
-            message = error.message || message;
-        } catch {
-            // Mantém a mensagem padrão quando a API não retorna JSON.
-        }
-
-        throw new Error(message);
-    }
-
-    return response.json();
+export function deleteUser(userId) {
+    return requestAuthenticated(
+        `/users/${encodeURIComponent(userId)}`,
+        { method: 'DELETE' }
+    );
 }
 
-export async function putUser(userId, updateUser) {
-    const response = await fetch(`${BASE_URL}/users/${userId}`, {
+export function getUserById(userId) {
+    return requestAuthenticated(
+        `/users/${encodeURIComponent(userId)}`
+    );
+}
+
+export function putUser(userId, updatedUser) {
+    return requestAuthenticated(
+        `/users/${encodeURIComponent(userId)}`,
+        {
             method: 'PUT',
-            headers: {
-                'Content-Type' :'application/json',
-            },
-            body: JSON.stringify(updateUser)
-    });
-    if(!response.ok){
-        let message = `Erro ao editar usuário: ${response.status}`
-        try{
-            const error = await response.json()
-            message = error.message || message
-        }catch{
-
+            body: updatedUser
         }
-        throw new Error(message)
-    }
-
-    return response.json();
+    );
 }
