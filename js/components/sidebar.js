@@ -2,6 +2,8 @@ import { createIconButton } from "./iconButton.js"
 import { createUserProfileImage } from "./userProfileImage.js"
 import { createDefaultButton } from "./defaultButton.js"
 import { getCurrentRoutePath, updateUrl } from "../core/router.js"
+import { logout } from '../api/auth.js';
+import { getToken, clearSession } from '../utils/storage.js';
 
 export function createSidebar(user = {}) {
     const aside = document.createElement('aside')
@@ -131,7 +133,35 @@ export function createSidebar(user = {}) {
         iconPosition: 'before'
     })
 
-    asideFooter.appendChild(createButton)
+    logoutButton.type = 'button';
+
+    logoutButton.addEventListener('click', async () => {
+    if (logoutButton.disabled) {
+        return;
+    }
+
+    logoutButton.disabled = true;
+    logoutButton.textContent = 'Saindo...';
+
+    const token = getToken();
+
+    try {
+        if (token) {
+            await logout(token);
+        }
+    } catch {
+        console.error(
+            'Não foi possível confirmar o encerramento no servidor.'
+        );
+    } finally {
+        clearSession();
+        window.location.replace('./index.html');
+    }
+});
+
+    if (user.role === 'administrador') {
+    asideFooter.appendChild(createButton);
+}
     asideFooter.appendChild(logoutButton)
 
     const sidebarContent = document.createElement('div')
